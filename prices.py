@@ -14,7 +14,7 @@ from rnl_util import Logged
 
 # Database
 SQLALCHEMY = "SQLAlchemy {}"
-SQLALCHEMY_DB = "sqlite:///test_db.db"
+SQLALCHEMY_DB = "sqlite:///price.db"
 SELECT_PRICE = "select * from price"
 SELECT_QUANDL = "select symbol from provider where host='quandl'"
 SELECT_YAHOO = "select symbol from provider where host='yahoo'"
@@ -49,8 +49,8 @@ OFFSET_ZERO_START = 1
 
 class Database(metaclass=Logged):
     '''Database created with automatic logging from metaclass'''
-    def __init__(self):
-        self.engine = create_engine(SQLALCHEMY_DB)
+    def __init__(self, new_database=SQLALCHEMY_DB):
+        self.engine = create_engine(new_database)
 
     def __str__(self):
         return SQLALCHEMY.format(self.engine)
