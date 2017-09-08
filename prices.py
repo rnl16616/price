@@ -14,7 +14,7 @@ from rnl_util import Logged
 
 # Database
 SQLALCHEMY = "SQLAlchemy {}"
-SQLALCHEMY_DB = "sqlite:///price.db"
+SQLALCHEMY_DB = "sqlite:///prices.db"
 SELECT_PRICE = "select * from price"
 SELECT_QUANDL = "select symbol from provider where host='quandl'"
 SELECT_YAHOO = "select symbol from provider where host='yahoo'"
@@ -22,9 +22,12 @@ SELECT_SYMBOL = "select symbol from provider"
 SELECT_DATE = "select date from price where symbol='{}'"
 SELECT_PROVIDER = "select distinct host from provider"
 DEFAULT_TO_APPEND = "append"
+UPDATE_MODE_REPLACE = "replace"
 DB_PRICE_TABLE = "price"
+DB_PROVIDER_TABLE = "provider"
 
 # Price providers
+PROVIDER_CSV = "provider.csv"
 YAHOO_DATA_PROVIDER = "yahoo"
 QUANDL_DATA_PROVIDER = "quandl"
 
@@ -49,8 +52,8 @@ OFFSET_ZERO_START = 1
 
 class Database(metaclass=Logged):
     '''Database created with automatic logging from metaclass'''
-    def __init__(self, new_database=SQLALCHEMY_DB):
-        self.engine = create_engine(new_database)
+    def __init__(self, database=SQLALCHEMY_DB):
+        self.engine = create_engine(database)
 
     def __str__(self):
         return SQLALCHEMY.format(self.engine)
@@ -115,7 +118,12 @@ class Host(metaclass=Logged):
         dataframe.reset_index(inplace=True)
         dataframe.rename(columns=COLUMN_MAP, inplace=True)
         dataframe.insert(COLUMN_LOCATION, SYMBOL_COLUMN, symbol)
-        return dataframe[COPY_COLUMN].copy()
+
+        # Copy only required dataframe columns and convert to short date (sd)
+        result = dataframe[COPY_COLUMN].copy()
+        result[DATE_COLUMN] = pandas.Series([str(sd)[START:SLICE_DATE]
+                                             for sd in result[DATE_COLUMN]])
+        return result
 
     def get_latest_data(self, host, symbol, start_date):
         '''Use a start_date to collect data. If None then it gets all available
@@ -131,7 +139,7 @@ class Host(metaclass=Logged):
 
 class Prices(metaclass=Logged):
     '''Prices has two main methods - report data in database and update data'''
-    def update_data(self):
+    def update_all_symbols(self):
         '''Get latest data and write it to the database by iterating through
            the data providers (yahoo and quandl) and then the symbols for each
            data provider'''
@@ -140,6 +148,27 @@ class Prices(metaclass=Logged):
         for i, row in providers.iterrows():
             print("Host #{}: get {} symbols".format(i + 1, row[HOST_COLUMN]))
             self._get_latest(data, row[HOST_COLUMN])
+
+    @staticmethod
+    def update_symbol(provider, symbol):
+        '''Update symbol'''
+        data = Database()
+        host = Host()
+        next_day = data.get_next_day(symbol)
+        result = host.get_latest_data(provider, symbol, next_day)
+        data.set(DB_PRICE_TABLE, result)
+        print("Updated {} from {}".format(symbol, next_day))
+        return result
+
+    @staticmethod
+    def replace_provider(filename=PROVIDER_CSV):
+        '''Replace provider table with an updated version provider by user'''
+        data = Database()
+        host = Host()
+        result = host.get_csv(filename)
+        data.set(DB_PROVIDER_TABLE, result, update=UPDATE_MODE_REPLACE)
+        print("Replaced provider with content from {}".format(filename))
+        return result
 
     @staticmethod
     def _get_latest(database, data_provider):
