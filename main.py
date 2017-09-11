@@ -1,16 +1,11 @@
 '''hello world'''
-from prices import Prices
-
-PROVIDER_CSV = "provider.csv"
-YAHOO_DATA_PROVIDER = "yahoo"
+from prices import Show
 
 
 def main():
-    '''Doc'''
-    price = Prices()
-    # price.report()
-    price.update_symbol(YAHOO_DATA_PROVIDER, "^FTAS")
-
+    '''Main'''
+    show = Show()
+    show.comparators()
 
 if __name__ == '__main__':
     main()

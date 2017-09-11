@@ -11,7 +11,7 @@ SQLALCHEMY_DB = "sqlite:///"
 CREATE_PRICE = '''CREATE TABLE price (symbol text, date text, price real)'''
 CREATE_PROVIDER = '''CREATE TABLE provider
                         (symbol text, description text, source text,
-                        host text)'''
+                        host text, comparison text)'''
 PROVIDER_TABLE = "provider"
 PROVIDER_CSV = "provider.csv"
 

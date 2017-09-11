@@ -1,25 +1,25 @@
-symbol,description,source,host
-^FTAS,FTSE All Share,UK FTSE - [Date | OHLC | Adj Close | Volume],yahoo
-^N225,Nikkei 225,Japan Nikkei - [Date | OHLC | Adj Close | Volume],yahoo
-^GDAXI,Dax,Germany Xetra - [Date | OHLC | Adj Close | Volume],yahoo
-^GSPC,S&P 500,US NYSE - [Date | OHLC | Adj Close | Volume],yahoo
-GLD,SPDR Gold Trust ETF,US NYSE - [Date | OHLC | Adj Close | Volume],yahoo
-ACWI,All country world index,US NASDAQ - [Date | OHLC | Adj Close | Volume],yahoo
-WGC/GOLD_DAILY_USD,Daily Gold $,World Gold Council - [Date | Value],quandl
-ODA/PALLFNF_INDEX,IMF All Commodity Price Index,IMF Cross Country (Monthly - www.opendataforafrica.org) - [Date | Value],quandl
-FRED/DFF,Effective Fed Funds Interest Rate,US Federal Reserve (fred.stlouisfed.org) - [Date | Value],quandl
-BOE/IUDBEDR,BoE Central Bank Rate,UK Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl
-BUNDESBANK/BBK01_SU0202,ECB Central Bank Rate,Deutsche Bundesbank (www.bundesbank.de) - [Date | Value],quandl
-FRED/DGS10,10 Year US Treasury constant maturity,US Federal Reserve (www.federalreserve.gov) - [Date | Value],quandl
-ECB/FM_M_U2_EUR_4F_BB_U2_10Y_YLD,Euro 10 Year Rate,ECB (Monthly - sdw.ecb.europa.eu) - [Date | Percent per annum],quandl
-BOE/IUDMNPY,UK 10 Year Rate,UK (www.bankofengland.co.uk) - [Date | Value],quandl
-MOFJ/INTEREST_RATE_JAPAN_10Y,JPY 10 Year Rate,Japan (www.mof.go.jp) - [Date | Value],quandl
-CHRIS/ICE_DX1,US Dollar Index (ICE),US (www.ofdp.org) - [Date | Open | High | Low | Settle | Wave...],quandl
-BOE/XUDLGBD,Sterling to 1 US Dollar,Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl
-BOE/XUDLBK73,Chinese Yuan to 1 US Dollar,Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl
-BOE/XUDLJYD,Japanese Yen to 1 US Dollar,Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl
-BOE/XUDLERD,Euro to US Dollar,Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl
-RATEINF/CPI_USA,US Consumer Price Index,Rate Inflation (Monthly www.rateinflation.com) - [Date | Value],quandl
-RATEINF/CPI_JPN,Japanese Consumer Price Index,Rate Inflation (Monthly www.rateinflation.com) - [Date | Value],quandl
-RATEINF/CPI_EUR,European Consumer Price Index,Rate Inflation (Monthly www.rateinflation.com) - [Date | Value],quandl
-RATEINF/CPI_GBR,UK Consumer Price Index,Rate Inflation (Monthly www.rateinflation.com) - [Date | Value],quandl
+symbol,description,source,host,comparison
+^FTAS,FTSE All Share,UK FTSE - [Date | OHLC | Adj Close | Volume],yahoo,ShareIndex
+^N225,Nikkei 225,Japan Nikkei - [Date | OHLC | Adj Close | Volume],yahoo,ShareIndex
+^GDAXI,Dax,Germany Xetra - [Date | OHLC | Adj Close | Volume],yahoo,ShareIndex
+^GSPC,S&P 500,US NYSE - [Date | OHLC | Adj Close | Volume],yahoo,ShareIndex
+GLD,SPDR Gold Trust ETF,US NYSE - [Date | OHLC | Adj Close | Volume],yahoo,Gold
+ACWI,All country world index,US NASDAQ - [Date | OHLC | Adj Close | Volume],yahoo,WorldIndex
+WGC/GOLD_DAILY_USD,Daily Gold $,World Gold Council - [Date | Value],quandl,Gold
+ODA/PALLFNF_INDEX,IMF All Commodity Price Index,IMF Cross Country (Monthly - www.opendataforafrica.org) - [Date | Value],quandl,CommodityIndex
+FRED/DFF,Effective Fed Funds Interest Rate,US Federal Reserve (fred.stlouisfed.org) - [Date | Value],quandl,CentralBank
+BOE/IUDBEDR,BoE Central Bank Rate,UK Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl,CentralBank
+BUNDESBANK/BBK01_SU0202,ECB Central Bank Rate,Deutsche Bundesbank (www.bundesbank.de) - [Date | Value],quandl,CentralBank
+FRED/DGS10,10 Year US Treasury constant maturity,US Federal Reserve (www.federalreserve.gov) - [Date | Value],quandl,10Year
+ECB/FM_M_U2_EUR_4F_BB_U2_10Y_YLD,Euro 10 Year Rate,ECB (Monthly - sdw.ecb.europa.eu) - [Date | Percent per annum],quandl,10Year
+BOE/IUDMNPY,UK 10 Year Rate,UK (www.bankofengland.co.uk) - [Date | Value],quandl,10Year
+MOFJ/INTEREST_RATE_JAPAN_10Y,JPY 10 Year Rate,Japan (www.mof.go.jp) - [Date | Value],quandl,10Year
+CHRIS/ICE_DX1,US Dollar Index (ICE),US (www.ofdp.org) - [Date | Open | High | Low | Settle | Wave...],quandl,DollarIndex
+BOE/XUDLGBD,Sterling to 1 US Dollar,Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl,Currency
+BOE/XUDLBK73,Chinese Yuan to 1 US Dollar,Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl,Currency
+BOE/XUDLJYD,Japanese Yen to 1 US Dollar,Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl,Currency
+BOE/XUDLERD,Euro to US Dollar,Bank of England (www.bankofengland.co.uk) - [Date | Value],quandl,Currency
+RATEINF/CPI_USA,US Consumer Price Index,Rate Inflation (Monthly www.rateinflation.com) - [Date | Value],quandl,Inflation
+RATEINF/CPI_JPN,Japanese Consumer Price Index,Rate Inflation (Monthly www.rateinflation.com) - [Date | Value],quandl,Inflation
+RATEINF/CPI_EUR,European Consumer Price Index,Rate Inflation (Monthly www.rateinflation.com) - [Date | Value],quandl,Inflation
+RATEINF/CPI_GBR,UK Consumer Price Index,Rate Inflation (Monthly www.rateinflation.com) - [Date | Value],quandl,Inflation

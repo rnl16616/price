@@ -19,6 +19,8 @@ SELECT_PRICE = "select * from price"
 SELECT_QUANDL = "select symbol from provider where host='quandl'"
 SELECT_YAHOO = "select symbol from provider where host='yahoo'"
 SELECT_SYMBOL = "select symbol from provider"
+SELECT_COMPARATORS = "select distinct comparison from provider"
+SELECT_COMPARISON = "select symbol from provider where comparison='{}'"
 SELECT_DATE = "select date from price where symbol='{}'"
 SELECT_PROVIDER = "select distinct host from provider"
 DEFAULT_TO_APPEND = "append"
@@ -42,12 +44,30 @@ COPY_COLUMN = ["date", "symbol", "price"]
 DATE_COLUMN = "date"
 SYMBOL_COLUMN = "symbol"
 HOST_COLUMN = "host"
+COMPARISON_COLUMN = "comparison"
+PRICE_COLUMN = "price"
 COLUMN_LOCATION = 0
 TODAY = "today"
 ONE_DAY_OFFSET = "1 days"
 SLICE_DATE = 10
 START = 0
+TUPLE_VALUES = 1
 OFFSET_ZERO_START = 1
+
+# Chart
+SAVE_LOCATION = "c:\\temp\\"
+
+# Comparison using Provider
+GOLD = "Gold"
+SHARE_INDEX = "ShareIndex"
+WORLD_INDEX = "WorldIndex"
+COMMODITY_INDEX = "CommodityIndex"
+CENTRAL_BANK = "CentralBank"
+TEN_YEAR_RATE = "10Year"
+DOLLAR_INDEX = "DollarIndex"
+CURRENCY = "Currency"
+INFLATION = "Inflation"
+STRIP_OR_CLAUSE = -4
 
 
 class Database(metaclass=Logged):
@@ -209,3 +229,45 @@ class Prices(metaclass=Logged):
 
             print("Index: {}".format(index), "Symbol: {}".format(symbol),
                   "Last date: {}".format(last_day), "Count: {}".format(count))
+
+
+class Show(metaclass=Logged):
+    '''Show'''
+    def price_set(self, title, price_set, value_set=PRICE_COLUMN):
+        '''Gold'''
+        data = Database()
+        query = SELECT_PRICE + self.where_comparators(price_set)
+        result = data.get(query)
+        pivot_data = result.pivot(index=DATE_COLUMN, columns=SYMBOL_COLUMN,
+                                  values=value_set)
+        pivot_data = pivot_data.dropna()
+        self.chart(title, pivot_data)
+
+    def comparators(self):
+        '''Comparators'''
+        data = Database()
+        result = data.get(SELECT_COMPARATORS)
+        for i in result.iterrows():
+            self.price_set(i[TUPLE_VALUES][START], i[TUPLE_VALUES][START])
+
+    @staticmethod
+    def where_comparators(comparison_set):
+        '''Select symbols for comparison'''
+        data = Database()
+        query = SELECT_COMPARISON.format(comparison_set)
+        result = data.get(query)
+        where_clause = " where "
+        for symbol in result[SYMBOL_COLUMN]:
+            where_clause = where_clause + "symbol='{}'".format(symbol) + " or "
+        where_clause = where_clause[:STRIP_OR_CLAUSE]
+        return where_clause
+
+    @staticmethod
+    def chart(title, data):
+        '''Chart'''
+        chart = data.plot(title=title, figsize=(16, 10)).get_figure()
+        # today = str(pandas.to_datetime(TODAY))[START:SLICE_DATE]
+        today = str(pandas.to_datetime(TODAY).date())
+        filename = SAVE_LOCATION + title + "_" + today + ".png"
+        chart.savefig(filename)
+        print("Saved chart to {}".format(filename))
