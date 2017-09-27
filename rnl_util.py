@@ -14,11 +14,13 @@ import logging
 import functools
 import cProfile
 
-LOG_FILE = "c:\\temp\\logged.log"
-LOG_LEVEL = logging.DEBUG
-LOG_FORMAT = "%(asctime)s: %(message)s"
+LOG_LOCATION = "c:\\temp\\"
+LOG_FILE = "logged.txt"
+LOG_LEVEL = logging.INFO
+LOG_FORMAT = "%(asctime)s: %(name)s: %(message)s"
 
-logging.basicConfig(filename=LOG_FILE, level=LOG_LEVEL, format=LOG_FORMAT)
+logging.basicConfig(filename=LOG_LOCATION + LOG_FILE, level=LOG_LEVEL,
+                    format=LOG_FORMAT)
 
 
 class Logged(type):
@@ -39,11 +41,11 @@ class Logged(type):
         @functools.wraps(func)
         def inner(*args, **kwargs):
             ''' Inner '''
-            logging.info('Function %s was called with arguments %r and '
-                         'keywords %r.' % (func.__name__, args, kwargs))
+            logging.debug('Function %s was called with arguments %r and '
+                          'keywords %r.' % (func.__name__, args, kwargs))
             try:
                 response = func(*args, **kwargs)
-                logging.info('Function %s was successful.' % func.__name__)
+                logging.debug('Function %s was successful.' % func.__name__)
                 return response
             except Exception as exc:
                 logging.critical('Function call to %s raised exception: %r' %
@@ -60,16 +62,29 @@ class Logged(type):
             '''Read dump file with pstats - pstats.Stats(func.__name__.profile")
                                             prf.sort_stats("time")
                                             prf.print_stats()'''
-            logging.info('The function %s was called with arguments %r and '
-                         'keywords %r.' % (func.__name__, args, kwargs))
+            logging.debug('The function %s was called with arguments %r and '
+                          'keywords %r.' % (func.__name__, args, kwargs))
             try:
                 profile = cProfile.Profile()
                 result = profile.runcall(func, *args, **kwargs)
                 profile.dump_stats(func.__name__ + ".profile")
-                logging.info('Function %s was successful.' % func.__name__)
+                logging.debug('Function %s was successful.' % func.__name__)
                 return result
             except Exception as exc:
                 logging.critical('Function call to %s raised exception: %r' %
                                  (func.__name__, exc))
                 raise
         return inner
+
+    def logger(name, filename=LOG_LOCATION + LOG_FILE, format=LOG_FORMAT):
+        '''Return a new logger to the caller and output to both console and
+           file using the same format'''
+        logger = logging.getLogger(name)
+        logger.setLevel(LOG_LEVEL)
+        file_handler = logging.FileHandler(filename)
+        file_handler.setFormatter(logging.Formatter(format))
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(logging.Formatter(format))
+        logger.addHandler(file_handler)
+        logger.addHandler(stream_handler)
+        return logger
